@@ -7,7 +7,7 @@
 
 ## Overview of the Project
 
-### Project : Data Preprocessing Pipeline for Machine Learning
+### Project : Movie Success Prediction: Evaluation and Comparison of Key Features
 
 ### Objective 
 To predict the success of movies based on various features such as rating, votes, revenue, genre, director, and actors using a machine learning approach.
@@ -18,6 +18,7 @@ To predict the success of movies based on various features such as rating, votes
 <br>
 Handle missing values in numerical and categorical columns.<br>
 Encode categorical variables into numerical format using one-hot encoding.<br>
+
 -**Feature Scaling**:<br>
 Standardize numerical features to normalize data for better model performance.<br>
 
@@ -36,7 +37,7 @@ Analyze performance metrics to assess the model's reliability.<br>
 -**Python** :The primary programming lnguage for Data Preprocessing <br>
 -**Pandas**: Facilitates data manipulation and analysis, including loading, transforming, and cleaning datasets.<br>
 -**NumPy**: Provides efficient numerical computations for handling missing values and scaling data.<br>
--**Seaborn** & Matplotlib: For data visualization (if used further in exploratory analysis).
+-**Seaborn** & Matplotlib: For data visualization (if used further in exploratory analysis).<br>
 -**Scikit-learn**: Offers robust tools for encoding, scaling, and implementing preprocessing techniques.<br>
 
 
