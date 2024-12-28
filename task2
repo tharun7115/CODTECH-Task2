@@ -1,0 +1,116 @@
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
+
+# Load the dataset
+def load_data(file_path):
+    """
+    Load the dataset from a CSV file and print basic details.
+    """
+    try:
+        data = pd.read_csv(file_path)
+        print("Data loaded successfully!")
+        print("First 5 rows of the dataset:\n", data.head())
+        print("\nDataset information:\n")
+        data.info()
+        return data
+    except Exception as e:
+        print(f"Error loading data: {e}")
+        return None
+
+# Handle missing values
+def handle_missing_values(data):
+    """
+    Handle missing values in the dataset by using median for numerical columns
+    and dropping rows with missing values in categorical columns.
+    """
+    print("\nHandling missing values...")
+    numerical_columns = ['Rating', 'Votes', 'Revenue (Millions)']
+    for col in numerical_columns:
+        if col in data.columns:
+            data[col].fillna(data[col].median(), inplace=True)
+            print(f"Filled missing values in '{col}' with its median value.")
+    
+    categorical_columns = ['Genre', 'Director', 'Actors']
+    data.dropna(subset=categorical_columns, inplace=True)
+    print(f"Dropped rows with missing values in columns: {categorical_columns}.")
+    return data
+
+# Encode categorical variables
+def encode_categorical(data, categorical_columns):
+    """
+    Convert categorical variables into dummy/indicator variables.
+    """
+    print("\nEncoding categorical variables...")
+    data = pd.get_dummies(data, columns=categorical_columns, drop_first=True)
+    print("Categorical variables encoded.")
+    return data
+
+# Scale features
+def scale_features(X):
+    """
+    Scale numerical features using StandardScaler.
+    """
+    print("\nScaling features...")
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+    print("Features scaled.")
+    return X_scaled, scaler
+
+# Train and evaluate the model
+def train_and_evaluate_model(X_train, X_test, y_train, y_test):
+    """
+    Train a logistic regression model and evaluate its performance.
+    """
+    print("\nTraining Logistic Regression model...")
+    model = LogisticRegression(max_iter=1000)
+    model.fit(X_train, y_train)
+    print("Model trained.")
+
+    # Make predictions
+    y_pred = model.predict(X_test)
+
+    # Evaluate performance
+    accuracy = accuracy_score(y_test, y_pred)
+    conf_matrix = confusion_matrix(y_test, y_pred)
+    class_report = classification_report(y_test, y_pred)
+
+    # Print evaluation metrics
+    print(f"\nAccuracy: {accuracy:.2f}")
+    print("\nConfusion Matrix:\n", conf_matrix)
+    print("\nClassification Report:\n", class_report)
+
+# Main function
+def main():
+    file_path = '/content/movie_success_rate.csv'  # Update with the correct file path
+    
+    # Load data
+    data = load_data(file_path)
+    if data is None:
+        return
+
+    # Preprocess the data
+    data = handle_missing_values(data)
+    categorical_columns = ['Genre', 'Director', 'Actors']
+    data = encode_categorical(data, categorical_columns)
+
+    # Define features and target
+    X = data.drop(columns=['Title', 'Success'])
+    y = data['Success']
+
+    # Scale features
+    X_scaled, scaler = scale_features(X)
+
+    # Split the data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+
+    # Train and evaluate the model
+    train_and_evaluate_model(X_train, X_test, y_train, y_test)
+
+if __name__ == "__main__":
+    main()
